@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Hotel, Room } from '@/app/types';
 
 interface HotelDetailClientProps {
@@ -13,17 +14,13 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState('2');
+  const [dateError, setDateError] = useState('');
 
-  const handleBooking = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement booking functionality
-    console.log('Booking details:', {
-      hotelId: hotel.id,
-      roomId: selectedRoom?.id,
-      checkIn,
-      checkOut,
-      guests,
-    });
+  const validateDates = (checkIn: string, checkOut: string) => {
+    if (!checkIn || !checkOut) return true;
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    return checkOutDate > checkInDate;
   };
 
   return (
@@ -61,7 +58,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       </div>
 
       {/* Room Selection */}
-      <div className="mb-12">
+      <div>
         <h2 className="text-2xl font-bold mb-6">Available Rooms</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {hotel.rooms?.map((room) => (
@@ -84,75 +81,25 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               </div>
               <h3 className="text-xl font-semibold mb-2">{room.name}</h3>
               <p className="text-gray-600 mb-4">{room.description}</p>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-4">
                 <span className="text-lg font-bold text-blue-600">
                   ${room.price}
                   <span className="text-sm text-gray-500">/night</span>
                 </span>
                 <span className="text-gray-600">Up to {room.capacity} guests</span>
               </div>
+              <div className="grid grid-cols-1 gap-2">
+                <Link
+                  href={`/bookings?hotelId=${hotel.id}&roomId=${room.id}`}
+                  className="text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Book Now - ${room.price} per night
+                </Link>
+              </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Booking Form */}
-      {selectedRoom && (
-        <div className="bg-gray-50 rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-6">Book Your Stay</h2>
-          <form onSubmit={handleBooking} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Check-in Date
-              </label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Check-out Date
-              </label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Number of Guests
-              </label>
-              <select
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-              >
-                {[...Array(selectedRoom.capacity)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1} {i === 0 ? 'Guest' : 'Guests'}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="md:col-span-3">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Book Now - ${selectedRoom.price} per night
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
     </div>
   );
 } 

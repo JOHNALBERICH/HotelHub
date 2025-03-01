@@ -7,9 +7,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">About Us</h3>
-            <p className="text-gray-300">
-              HotelHub connects travelers with the perfect accommodations worldwide.
-            </p>
+            <div className="text-gray-300 space-y-2">
+              <p>Nguyen Ky Bao Tran-0928693735</p>
+              <p>Nguyen Van Hung-0879378668</p>
+              <p>Dao Duc Manh-0868591282</p>
+            </div>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
