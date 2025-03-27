@@ -473,13 +473,34 @@ export default function BookingsPage() {
                   </div>
 
                   <div className="bg-white rounded-xl shadow-lg p-6">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4">Payment Method</h3>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-gray-700 mb-3">Please scan the QR code below to complete your payment:</p>
+                        <div className="flex justify-center mb-4">
+                          <img
+                            src="/bank-qr.png"
+                            alt="Bank QR Code"
+                            width="200"
+                            height="200"
+                            className="border border-gray-200 rounded-lg"
+                          />
+                        </div>
+                        <p className="text-sm text-gray-500 mb-4">
+                          Amount to pay: <span className="font-bold">${selectedBooking.totalPrice}</span>
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          After payment, click 'Confirm Booking' to complete your reservation
+                        </p>
+                      </div>
+                    </div>
                     <div className="flex space-x-4">
                       <button
                         type="submit"
                         onClick={handleModifySubmit}
                         className="flex-1 bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
                       >
-                        {selectedBooking?.id === 'new' ? 'Complete Booking' : 'Save Changes'}
+                        Confirm Booking
                       </button>
                       <button
                         type="button"
@@ -559,4 +580,4 @@ export default function BookingsPage() {
       )}
     </div>
   );
-} 
+}

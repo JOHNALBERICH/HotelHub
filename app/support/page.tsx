@@ -108,7 +108,7 @@ export default function SupportPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: 'Hello! I\'m your hotel booking assistant. I can help you find the perfect room within your budget. What\'s your budget per night?',
+      text: 'Hi there! 👋 I\'m your friendly hotel booking assistant. I\'d love to help you find your perfect stay! Could you tell me your budget per night (in USD)?',
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -152,45 +152,50 @@ export default function SupportPage() {
         const suggestedRooms = hotelRooms.filter(room => room.price <= numberInMessage);
         
         if (suggestedRooms.length > 0) {
-          const roomSuggestions = suggestedRooms
-            .map(room => `${room.name} in ${room.location} at $${room.price}/night (${room.features.join(', ')})`)
+          const roomLinks = suggestedRooms
+            .map(room => {
+              const hotelId = room.name.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+              return `${room.name} in ${room.location} at $${room.price}/night\nView details: /hotels/${hotelId}\nFeatures: ${room.features.join(', ')}`;
+            })
             .join('\n\n');
 
           botResponse = {
             id: messages.length + 2,
-            text: `Great! For your budget of $${numberInMessage}, I can suggest these rooms:\n\n${roomSuggestions}\n\nWould you like more details about any of these options?`,
+            text: `Awesome! 😊 For your budget of $${numberInMessage}, here are some great options:\n\n${roomLinks}\n\nWould you like me to tell you more about any of these?`,
             sender: 'bot',
             timestamp: new Date(),
           };
         } else {
           botResponse = {
             id: messages.length + 2,
-            text: `I apologize, but I don't have any rooms available within your budget of $${numberInMessage}. Would you like to explore options in a different price range?`,
+            text: `Hmm, I couldn't find rooms within your $${numberInMessage} budget. 😕 Would you like me to check for options in a slightly higher price range? I might find some great deals!`,
             sender: 'bot',
             timestamp: new Date(),
           };
         }
       } else if (message.toLowerCase().includes('thank')) {
-        botResponse = {
-          id: messages.length + 2,
-          text: "You're welcome! Let me know if you need anything else.",
-          sender: 'bot',
-          timestamp: new Date(),
-        };
+          botResponse = {
+            id: messages.length + 2,
+            text: "You're very welcome! 😊 It was my pleasure to help. Don't hesitate to ask if you need anything else - I'm here for you!",
+            sender: 'bot',
+            timestamp: new Date(),
+          };
       } else if (message.toLowerCase().includes('help')) {
-        botResponse = {
-          id: messages.length + 2,
-          text: "I can help you find a room based on your budget. Just tell me how much you'd like to spend per night, and I'll suggest some options!",
-          sender: 'bot',
-          timestamp: new Date(),
-        };
+          botResponse = {
+            id: messages.length + 2,
+            text: "Of course! 😊 I specialize in finding the perfect hotel rooms. Just let me know your budget per night (in USD), and I'll show you some fantastic options!",
+            sender: 'bot',
+            timestamp: new Date(),
+          };
       } else {
-        botResponse = {
-          id: messages.length + 2,
-          text: "I'm here to help you find the perfect room. Could you please let me know your budget per night?",
-          sender: 'bot',
-          timestamp: new Date(),
-        };
+          botResponse = {
+            id: messages.length + 2,
+            text: "I'd be happy to help you find your ideal hotel! 😊 Could you tell me your budget per night (in USD) so I can suggest some wonderful options?",
+            sender: 'bot',
+            timestamp: new Date(),
+          };
       }
 
       setMessages(prev => [...prev, botResponse]);
@@ -249,7 +254,7 @@ export default function SupportPage() {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Type your message here..."
-              className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 p-2 border rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               type="submit"
@@ -262,4 +267,4 @@ export default function SupportPage() {
       </div>
     </div>
   );
-} 
+}
